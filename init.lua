@@ -190,6 +190,7 @@ require("lazy").setup({
   },
   "neovim/nvim-lspconfig",              -- Language Server Protocol configuration framework
   "mattn/vim-goimports",                -- Auto-format Go imports on save
+  "plasticboy/vim-markdown",            -- Markdown syntax highlighting and features
 
   -- **File Management & Icons**
   {
