@@ -63,10 +63,7 @@ vim.cmd("set noswapfile")              -- Disable swap files
 vim.g.loaded_netrw = 1                 -- Disable Netrw file explorer
 vim.g.loaded_netrwPlugin = 1
 
--- Markdown Specific Settings
-vim.g.vim_markdown_conceal = 0
-vim.g.vim_markdown_conceal_code_blocks = 0
-vim.g.vim_markdown_new_list_item_indent = 0
+-- Markdown Specific Settings (Removed vim-markdown related settings)
 
 -- =============================================================================
 -- Key Mappings
@@ -190,7 +187,6 @@ require("lazy").setup({
   },
   "neovim/nvim-lspconfig",              -- Language Server Protocol configuration framework
   "mattn/vim-goimports",                -- Auto-format Go imports on save
-  "plasticboy/vim-markdown",            -- Markdown syntax highlighting and features
 
   -- **File Management & Icons**
   {
