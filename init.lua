@@ -345,6 +345,29 @@ vim.cmd([[hi EndOfBuffer guibg=NONE ctermbg=NONE]]) -- Ensure EndOfBuffer is als
 vim.opt.conceallevel = 1
 
 -- =============================================================================
+-- Markdown Configuration
+-- =============================================================================
+-- Create an autocommand group for Markdown settings
+local markdown_group = vim.api.nvim_create_augroup("MarkdownSettings", { clear = true })
+
+-- Set up custom highlighting for Markdown headings
+vim.api.nvim_create_autocmd("FileType", {
+  group = markdown_group,
+  pattern = "markdown",
+  callback = function()
+    -- Define custom highlight for H1 headings (make them bold)
+    vim.cmd([[highlight MarkdownH1 gui=bold guifg=#a6accd term=bold cterm=bold ctermfg=lightblue]])
+    
+    -- Link Treesitter's @text.title.1.markdown to our custom highlight
+    vim.cmd([[highlight link @text.title.1.markdown MarkdownH1]])
+    
+    -- For fallback without Treesitter
+    vim.cmd([[highlight link markdownH1 MarkdownH1]])
+  end,
+  desc = "Configure custom markdown heading styles",
+})
+
+-- =============================================================================
 -- Indicate Configuration Loaded
 -- =============================================================================
 print("Neovim configuration loaded successfully!")
