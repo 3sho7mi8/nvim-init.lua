@@ -185,6 +185,19 @@ require("lazy").setup({
       })
     end,
   },
+  {
+  "nvim-treesitter/playground",
+  cmd = { "TSHighlightCapturesUnderCursor", "TSPlaygroundToggle" },
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      playground = {
+        enable = true,
+        updatetime = 25,
+        persist_queries = false,
+      },
+    })
+  end,
+},
   "neovim/nvim-lspconfig",              -- Language Server Protocol configuration framework
   "mattn/vim-goimports",                -- Auto-format Go imports on save
 
@@ -277,7 +290,7 @@ require("lazy").setup({
         }
       })
       -- Set conceal level for better Markdown rendering (optional)
-      vim.opt.conceallevel = 1
+      vim.opt.conceallevel = 2
     end,
   },
 
@@ -338,11 +351,11 @@ require("lazy").setup({
 vim.cmd([[colorscheme iceberg]])
 
 -- Enable transparent background (needs to be after colorscheme)
-vim.cmd([[hi Normal guibg=NONE ctermbg=NONE]])
-vim.cmd([[hi EndOfBuffer guibg=NONE ctermbg=NONE]]) -- Ensure EndOfBuffer is also transparent
+-- vim.cmd([[hi Normal guibg=NONE ctermbg=NONE]])
+-- vim.cmd([[hi EndOfBuffer guibg=NONE ctermbg=NONE]]) -- Ensure EndOfBuffer is also transparent
 
 -- Ensure conceal level is set (might be overridden by plugins)
-vim.opt.conceallevel = 1
+-- vim.opt.conceallevel = 0
 
 -- =============================================================================
 -- Markdown Configuration
