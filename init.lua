@@ -297,10 +297,10 @@ require("lazy").setup({
   -- **LSP Management (Mason)**
   {
     "williamboman/mason.nvim",        -- Manages LSP servers, linters, formatters installation
-    build = ":MasonUpdate",           -- Update Mason registry on build/update
+    build = ":MasonUpdate",
     config = function()
       require("mason").setup({
-        ui = { border = "rounded" } -- Optional UI customization
+        ui = { border = "rounded" }
       })
     end
   },
@@ -309,34 +309,29 @@ require("lazy").setup({
     dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
     config = function()
       require("mason-lspconfig").setup({
-        -- Ensure these LSP servers are installed via Mason
         ensure_installed = { "lua_ls", "pyright", "gopls" },
-        automatic_installation = true, -- Automatically install servers in ensure_installed
-      })
+        automatic_installation = true,
 
-      -- Setup LSP servers installed via Mason using nvim-lspconfig
-      local lspconfig = require("lspconfig")
-      require("mason-lspconfig").setup_handlers({
-        -- Default handler: Setup server with default options
-        function (server_name)
-          lspconfig[server_name].setup({})
-        end,
-        -- Custom handler for lua_ls (example)
-        ["lua_ls"] = function ()
-          lspconfig.lua_ls.setup({
-            settings = {
-              Lua = {
-                runtime = { version = 'LuaJIT' },
-                diagnostics = { globals = {'vim'} },
-                workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-                telemetry = { enable = false },
+        handlers = {
+          function(server_name) -- デフォルトハンドラー
+            require("lspconfig")[server_name].setup({})
+          end,
+          ["lua_ls"] = function() -- lua_ls のカスタム設定
+            require("lspconfig").lua_ls.setup({
+              settings = {
+                Lua = {
+                  runtime = { version = 'LuaJIT' },
+                  diagnostics = { globals = { 'vim' } },
+                  workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+                  telemetry = { enable = false },
+                },
               },
-            },
-          })
-        end,
+            })
+          end,
+        },
       })
     end
-  },
+  }
 }, {
   -- Lazy.nvim options
   ui = {
