@@ -31,6 +31,7 @@ vim.opt.title = true                   -- Set terminal title
 vim.opt.list = true                    -- Show invisible characters
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' } -- Define invisible characters
 vim.opt.showmatch = true               -- Highlight matching brackets
+vim.opt.signcolumn = "yes"  -- サインカラムを常に表示して固定
 
 -- Behavior
 vim.opt.clipboard = vim.opt.clipboard + "unnamedplus" -- Use system clipboard
@@ -55,9 +56,6 @@ vim.opt.iskeyword:remove("_")          -- Treat '_' as part of words
 -- File Handling
 vim.cmd("set nobackup")                -- Disable backup files
 vim.cmd("set noswapfile")              -- Disable swap files
-
--- System Integration
--- vim.g.python3_host_prog = '/usr/local/bin/python3' -- Python host path (Removed, likely unnecessary)
 
 -- Disable Built-in Plugins
 vim.g.loaded_netrw = 1                 -- Disable Netrw file explorer
@@ -287,10 +285,11 @@ require("lazy").setup({
           folder = "daily", -- Folder for daily notes
           default_tags = { "daily" },
           template = "daily.md" -- Template for daily notes
+        },
+        ui = {
+          enable = false
         }
       })
-      -- Set conceal level for better Markdown rendering (optional)
-      vim.opt.conceallevel = 2
     end,
   },
 
@@ -331,12 +330,63 @@ require("lazy").setup({
         },
       })
     end
-  }
+  },
+  -- **Markdown Rendering** (ここに移動)
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    ft = { "markdown" },
+    config = function()
+      require('render-markdown').setup({
+        code = {
+          enabled = true,
+          style = 'full',
+        },
+        heading = {
+          enabled = true,
+          sign = false,
+          icons = { '# ', '## ', '### ', '#### ', '##### ', '###### ' },
+        },
+        bullet = {
+          icons = { '●', '○', '◆', '◇' },
+        },
+        checkbox = {
+          unchecked = { 
+            icon = '☐',
+            highlight = 'RenderMarkdownUnchecked',
+          },
+          checked = { 
+            icon = '☒',
+            highlight = 'RenderMarkdownChecked',
+          },
+        },
+      })
+    end,
+  },
+
 }, {
   -- Lazy.nvim options
   ui = {
     border = "rounded", -- Use rounded borders for Lazy UI
   },
+})
+
+vim.cmd([[highlight RenderMarkdownUnchecked guifg=#a6accd ctermfg=lightgray]])
+vim.cmd([[highlight RenderMarkdownChecked gui=strikethrough cterm=strikethrough]])
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = markdown_group,
+  pattern = "markdown",
+  callback = function()
+    -- Set up syntax highlighting for checked checkbox text
+    vim.cmd([[
+      syntax match MarkdownCheckedText /^\s*- \[x\] .*$/ contains=MarkdownCheckedBox
+      syntax match MarkdownCheckedBox /\[x\]/ contained
+      highlight MarkdownCheckedText gui=strikethrough cterm=strikethrough
+      highlight MarkdownCheckedBox gui=bold guifg=#10b981 cterm=bold ctermfg=green
+    ]])
+  end,
+  desc = "Apply strikethrough to checked checkbox text",
 })
 
 -- =============================================================================
